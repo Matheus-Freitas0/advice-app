@@ -1,42 +1,67 @@
 import React, { useState, useEffect } from 'react';
 
 function App() {
-  const [advice, setAdvice] = useState('');
-  const [adviceId, setAdviceId] = useState('')
+  const [advice, setAdvice] = useState(''); 
+  const [adviceId, setAdviceId] = useState(''); 
+  const [animate, setAnimate] = useState(false); 
+  const [darkMode, setDarkMode] = useState(false); 
 
+  
   const fetchAdvice = async () => {
-
     try {
-      const randomNumber = Math.floor(Math.random() * 100);
-      const response = await fetch(`https://api.adviceslip.com/advice/${randomNumber}`);
+      setAnimate(false); 
+      const randomNumber = Math.floor(Math.random() * 100); 
+      const response = await fetch(`https://api.adviceslip.com/advice/${randomNumber}`); 
       const data = await response.json();
-      setAdvice(data.slip.advice);
-      setAdviceId(data.slip.id);
-
+      setAdvice(data.slip.advice); 
+      setAdviceId(data.slip.id); 
+      setAnimate(true); 
     } catch (error) {
-
-      console.error("Erro ao buscar conselho:", error);
-
+      console.error("Erro ao buscar conselho:", error); 
     }
   };
 
   useEffect(() => {
-    fetchAdvice();
+    fetchAdvice(); 
   }, []);
 
-return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-80text-center">
-        <span className="text-gray-500 text-sm">Conselho #{adviceId}</span>
-        <p className="text-lg font-semibold my-4">{advice}</p>
+  return (
+    <div className={`flex justify-center items-center h-screen transition-colors duration-500 ${darkMode ? 'bg-gray-900' : 'bg-gray-700'}`}>
+      {}
+      
+      <div
+        className={`bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 lg:p-10 rounded-xl shadow-2xl w-64 sm:w-80 md:w-96 text-center transition-opacity duration-500 ${animate ? 'opacity-100' : 'opacity-0'}`}
+      >
+        {}
+        
+        <span className={`text-xl ${darkMode ? 'text-gray-300' : 'text-gray-500'}`}>
+          Conselho #{adviceId}
+        </span>
+        {}
+
+        <p className={`text-xl font-semibold my-4 ${darkMode ? 'text-white' : 'text-black'}`}>
+          {advice}
+        </p>
+        {}
+
         <button
           onClick={fetchAdvice}
           className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300"
         >
           Gerar Novo Conselho
         </button>
+        {}
+
+        <button
+          onClick={() => setDarkMode(!darkMode)} 
+          className="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 transition duration-300 mt-4"
+        >
+          {darkMode ? 'Modo Claro' : 'Modo Escuro'}
+        </button>
+        {}
       </div>
     </div>
   );
 }
+
 export default App;
